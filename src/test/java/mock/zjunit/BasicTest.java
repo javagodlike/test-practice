@@ -3,15 +3,18 @@ package mock.zjunit;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.atLeast;
@@ -20,7 +23,6 @@ import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.ignoreStubs;
-import static org.testng.Assert.*;
 // 静态导入会使代码更简洁
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
 @PrepareForTest({ StaticMethod.class })
 public class BasicTest {
 
@@ -37,6 +40,7 @@ public class BasicTest {
 	 * 验证某些行为
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
 	public void testVerify() {
 		// mock creation 创建mock对象
 		List mockedList = mock(List.class);
@@ -161,7 +165,7 @@ public class BasicTest {
 	}
 
 	@SuppressWarnings("rawtypes")
-	@Test(expectedExceptions = { RuntimeException.class })
+	@Test(expected = RuntimeException.class)
 	public void expectedException() {
 		// mock creation 创建mock对象
 		List mockedList = mock(List.class);
@@ -196,7 +200,7 @@ public class BasicTest {
 		Teacher mock = mock(Teacher.class);
 		mock.doSomething(p);
 		verify(mock).doSomething(argument.capture());
-		Assert.assertEquals("John", argument.getValue().getName());
+		assertEquals("John", argument.getValue().getName());
 	}
 
 	@Test
@@ -291,6 +295,7 @@ public class BasicTest {
 		PowerMockito.mockStatic(StaticMethod.class);
 		when(StaticMethod.checkPerson(ArgumentMatchers.anyString())).thenReturn(false);
 		boolean checkPerson = StaticMethod.checkPerson("");
+		PowerMockito.verifyStatic(StaticMethod.class);
 		assertFalse(checkPerson);
 	}
 
